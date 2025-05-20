@@ -3,6 +3,8 @@ import type { Beer } from "@/lib/types"
 import { PrismaClient } from "@/generated/prisma";
 import dataAccess from "./server/data-access.client";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
 
   // ugly hack because of docker build
