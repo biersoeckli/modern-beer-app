@@ -12,6 +12,7 @@ export async function POST(req: NextRequest) {
     const created = await dataAccess.client.beer.create({ data: beerData });
     return NextResponse.json(created, { status: 201 });
   } catch (e) {
+    console.error("Error creating beer:", e);
     return NextResponse.json({ error: "Failed to create beer" }, { status: 500 });
   }
 }
