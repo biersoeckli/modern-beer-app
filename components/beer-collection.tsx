@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import type { Beer } from "@/lib/types"
 import BeerCard from "./beer-card"
 import AddBeerDialog from "./add-beer-dialog"
@@ -16,9 +16,18 @@ export default function BeerCollection({ initialBeers }: BeerCollectionProps) {
   const [beers, setBeers] = useState<Beer[]>(initialBeers)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  const handleAddBeer = (newBeer: Beer) => {
-    setBeers([...beers, { ...newBeer, id: (beers.length + 1).toString() }])
-    setIsDialogOpen(false)
+  // Add beer to database and update state
+  const handleAddBeer = async (newBeer: Omit<Beer, "id">) => {
+    const res = await fetch("/api/beers", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newBeer),
+    })
+    if (res.ok) {
+      const created = await res.json()
+      setBeers([...beers, created])
+      setIsDialogOpen(false)
+    }
   }
 
   return (

@@ -1,0 +1,26 @@
+{
+	"name": "modern-beer-app",
+	"dockerComposeFile": "./docker.compose.yml",
+	"service": "modern-beer-app-vscode-container",
+	"workspaceFolder": "/workspace",
+	"shutdownAction": "stopCompose",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"Orta.vscode-jest",
+				"Prisma.prisma",
+				"pflannery.vscode-versionlens",
+				"github.vscode-github-actions",
+				"bradlc.vscode-tailwindcss",
+				"GitHub.copilot",
+				"GitHub.copilot-chat",
+				"oven.bun-vscode",
+				"christian-kohler.path-intellisense",
+				"esbenp.prettier-vscode",
+				"VisualStudioExptTeam.vscodeintellicode",
+				"mhutchie.git-graph",
+				"donjayamanne.githistory"
+			]
+		}
+	}
+}

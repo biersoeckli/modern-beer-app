@@ -1,0 +1,23 @@
+version: "3"
+services:
+  modern-beer-app-vscode-container:
+    image: mcr.microsoft.com/devcontainers/typescript-node
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    volumes:
+      - ..:/workspace
+      - ~/.ssh:/home/node/.ssh
+    env_file: devcontainer.env
+  modern-beer-app-db:
+    image: postgres:17-alpine
+    restart: always
+    hostname: modern-beer-app-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - modern-beer-app-db-volume:/var/lib/postgresql/data
+volumes:
+  modern-beer-app-db-volume:
+    driver: local

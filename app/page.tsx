@@ -1,41 +1,22 @@
 import BeerCollection from "@/components/beer-collection"
 import type { Beer } from "@/lib/types"
+import { PrismaClient } from "@/generated/prisma";
+import dataAccess from "./server/data-access.client";
 
-// Initial beer data
-const initialBeers: Beer[] = [
-  {
-    id: "1",
-    name: "Hoppy Wonder",
-    type: "IPA",
-    abv: 6.2,
-    brewery: "Craft Masters",
-    description:
-      "A bold IPA with bright citrus notes, hints of grapefruit zest, and a refreshing pine finish. Well-balanced with a moderate bitterness.",
-    image: "/placeholder.svg?height=200&width=200",
-  },
-  {
-    id: "2",
-    name: "Midnight Stout",
-    type: "Imperial Stout",
-    abv: 7.5,
-    brewery: "Dark Brews",
-    description:
-      "Rich and complex with notes of espresso, dark chocolate, and roasted malt. Velvety smooth mouthfeel with a subtle sweetness on the finish.",
-    image: "/placeholder.svg?height=200&width=200",
-  },
-  {
-    id: "3",
-    name: "Golden Sunshine",
-    type: "Pilsner",
-    abv: 4.8,
-    brewery: "Sunny Brew Co.",
-    description:
-      "A crisp, clean pilsner with delicate malt character and floral hop aroma. Light-bodied with excellent clarity and a dry, refreshing finish.",
-    image: "/placeholder.svg?height=200&width=200",
-  },
-]
+export default async function Home() {
 
-export default function Home() {
+  // ugly hack because of docker build
+  const getStaticProps = async () => {
+    if (process.env.SKIP_BUILD_STATIC === 'true') {
+      return [];
+    }
+
+    const beers = await dataAccess.client.beer.findMany();
+    return beers;
+  };
+  // Fetch beers from the database
+  const beers: Beer[] = await getStaticProps();
+
   return (
     <main className="min-h-screen bg-slate-50">
       <div className="container mx-auto px-4 py-12">
@@ -46,7 +27,7 @@ export default function Home() {
           </p>
         </header>
 
-        <BeerCollection initialBeers={initialBeers} />
+        <BeerCollection initialBeers={beers} />
       </div>
     </main>
   )
