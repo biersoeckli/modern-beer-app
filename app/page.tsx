@@ -9,15 +9,35 @@ export default async function Home() {
 
   // ugly hack because of docker build
   const getStaticProps = async () => {
-    if (process.env.SKIP_BUILD_STATIC === 'true') {
-      return [];
-    }
+    try {
+      if (process.env.SKIP_BUILD_STATIC === 'true') {
+        return [];
+      }
 
-    const beers = await dataAccess.client.beer.findMany();
-    return beers;
+      const beers = await dataAccess.client.beer.findMany();
+      return beers;
+    } catch (error) {
+      console.error("Error fetching beers, maybe the database is not initialized or configured:", error);
+      return undefined;
+    }
   };
   // Fetch beers from the database
-  const beers: Beer[] = await getStaticProps();
+  const beers: Beer[] | undefined = await getStaticProps();
+
+  if (!beers) {
+    return (
+      <main className="min-h-screen bg-slate-50">
+        <div className="container mx-auto px-4 py-12">
+
+          <div className="text-center text-red-600">
+            <p className="text-lg">Error: Unable to fetch data from the database. The database may not be initialized or configured correctly.
+              To initialize the database, please visit <code className="bg-slate-200 px-1 rounded">http://your-domain.com/init-db</code> endpoint of this site.
+            </p>
+          </div>
+        </div>
+      </main>
+    )
+  }
 
   return (
     <main className="min-h-screen bg-slate-50">
